@@ -13,4 +13,5 @@ export interface State {
   currentQuestion: number
   fetchQuestions: (limit: number) => Promise<void>
   selectAnswer: (questionId: number, answerIndex: number) => void
+  changeQuestion: (questionIndex: number) => void
 }

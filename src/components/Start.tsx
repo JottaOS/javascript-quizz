@@ -1,7 +1,7 @@
 import { Button } from '@mui/material'
 import { useQuestionStore } from '../stores/questions'
+import { QUESTIONS_LIMIT } from '../helpers/constants'
 
-const QUESTIONS_LIMIT = 10
 
 export const Start = () => {
   const fetchQuestions = useQuestionStore((state) => state.fetchQuestions)

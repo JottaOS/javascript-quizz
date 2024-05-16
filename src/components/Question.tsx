@@ -21,7 +21,7 @@ export const Question = ({ info }: { info: QuestionType }) => {
   const selectAnswer = useQuestionStore((state) => state.selectAnswer)
 
   return (
-    <Card variant="outlined" sx={{ bgcolor: '#222', p: 4, textAlign: 'left' }}>
+    <Card variant="outlined" sx={{ bgcolor: '#222', p: 4, textAlign: 'left'}}>
       <CardContent>
         <Typography variant="h5">{question}</Typography>
         <SyntaxHighlighter language="javascript" style={gradientDark}>
@@ -43,7 +43,7 @@ export const Question = ({ info }: { info: QuestionType }) => {
             <AlertTitle>{isCorrectUserAnswer ? 'Correcto' : 'Incorrecto'}</AlertTitle>
             {isCorrectUserAnswer
               ? 'Muy bien!'
-              : `La respuesta correcta es ${correctAnswer} - ${answers[correctAnswer]}`}
+              : `La respuesta correcta es ${answers[correctAnswer]}`}
           </Alert>
         </Snackbar>
       </CardActions>
