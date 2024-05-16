@@ -10,5 +10,19 @@ export const useQuestionStore = create<State>((set, get) => ({
     const questions = json.sort(() => Math.random() - 0.5).slice(0, limit)
 
     set({ questions })
+  },
+  selectAnswer: (questionId, answerIndex) => {
+    const { questions } = get()
+    const newQuestions = structuredClone(questions)
+    const questionIndex = newQuestions.findIndex((q) => q.id === questionId)
+    const questionInfo = newQuestions[questionIndex]
+
+    const isCorrectUserAnswer = questionInfo.correctAnswer === answerIndex
+    newQuestions[questionIndex] = {
+      ...questionInfo,
+      isCorrectUserAnswer,
+      userSelectedAnswer: answerIndex
+    }
+    set({ questions: newQuestions })
   }
 }))
