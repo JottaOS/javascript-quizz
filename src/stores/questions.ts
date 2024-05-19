@@ -1,48 +1,68 @@
 import { create } from 'zustand'
 import { type State } from '../types/types'
 import confetti from 'canvas-confetti'
+import { persist } from 'zustand/middleware'
+import * as questionService from '../services/questions'
 
-export const useQuestionStore = create<State>((set, get) => ({
-  questions: [],
-  currentQuestion: 0,
-  fetchQuestions: async (limit: number) => {
-    const res = await fetch('data.json')
-    const json = await res.json()
-    const questions = json.sort(() => Math.random() - 0.5).slice(0, limit)
+export const useQuestionStore = create<State>()(
+  persist(
+    (set, get) => ({
+      questions: [],
+      currentQuestion: 0,
+      answeredQuestions: 0,
+      isFinished: true,
+      fetchQuestions: async (limit: number) => {
+        const questions = await questionService.findAll(limit)
+        set({ questions })
+      },
+      selectAnswer: (questionId: number, answerIndex: number) => {
+        const { questions, answeredQuestions } = get()
+        const newQuestions = structuredClone(questions)
+        const questionIndex = newQuestions.findIndex((q) => q.id === questionId)
+        const questionInfo = newQuestions[questionIndex]
 
-    set({ questions })
-  },
-  selectAnswer: (questionId: number, answerIndex: number) => {
-    const { questions } = get()
-    const newQuestions = structuredClone(questions)
-    const questionIndex = newQuestions.findIndex((q) => q.id === questionId)
-    const questionInfo = newQuestions[questionIndex]
+        const isCorrectUserAnswer = questionInfo.correctAnswer === answerIndex
 
-    const isCorrectUserAnswer = questionInfo.correctAnswer === answerIndex
+        if (isCorrectUserAnswer) confetti()
 
-    if (isCorrectUserAnswer) confetti()
+        newQuestions[questionIndex] = {
+          ...questionInfo,
+          isCorrectUserAnswer,
+          userSelectedAnswer: answerIndex
+        }
 
-    newQuestions[questionIndex] = {
-      ...questionInfo,
-      isCorrectUserAnswer,
-      userSelectedAnswer: answerIndex
+        const newAnsweredQuestions = answeredQuestions + 1
+
+        console.log(newAnsweredQuestions)
+
+        set({
+          questions: newQuestions,
+          answeredQuestions: newAnsweredQuestions,
+          isFinished: newAnsweredQuestions === questions.length
+        })
+      },
+      goPreviousQuestion: () => {
+        const { currentQuestion } = get()
+        const previousQuestion = currentQuestion - 1
+
+        if (previousQuestion >= 0) {
+          set({ currentQuestion: previousQuestion })
+        }
+      },
+      goNextQuestion: () => {
+        const { currentQuestion, questions } = get()
+        const nextQuestion = currentQuestion + 1
+
+        if (nextQuestion < questions.length) {
+          set({ currentQuestion: nextQuestion })
+        }
+      },
+      reset: () => {
+        set({ currentQuestion: 0, questions: [], isFinished: false })
+      }
+    }),
+    {
+      name: 'questions'
     }
-    set({ questions: newQuestions })
-  },
-  goPreviousQuestion: () => {
-    const { currentQuestion } = get()
-    const previousQuestion = currentQuestion - 1
-
-    if (previousQuestion >= 0) {
-      set({ currentQuestion: previousQuestion })
-    }
-  },
-  goNextQuestion: () => {
-    const { currentQuestion, questions } = get()
-    const nextQuestion = currentQuestion + 1
-
-    if (nextQuestion < questions.length) {
-      set({ currentQuestion: nextQuestion })
-    }
-  }
-}))
+  )
+)

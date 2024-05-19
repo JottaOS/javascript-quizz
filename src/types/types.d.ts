@@ -15,4 +15,7 @@ export interface State {
   selectAnswer: (questionId: number, answerIndex: number) => void
   goNextQuestion: () => void
   goPreviousQuestion: () => void
+  reset: () => void
+  answeredQuestions: number
+  isFinished: boolean
 }

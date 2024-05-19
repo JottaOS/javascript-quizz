@@ -5,9 +5,11 @@ import { Start } from './components/Start'
 import { useQuestionStore } from './stores/questions'
 import { Game } from './components/Game'
 import { Footer } from './components/Footer'
+import { FinalScreen } from './components/FinalScreen'
 
 function App() {
   const questions = useQuestionStore((state) => state.questions)
+  const isFinished = useQuestionStore((state) => state.isFinished)
 
   return (
     <main>
@@ -25,19 +27,23 @@ function App() {
         >
           <JavaScriptLogo size={200} />
           <Typography variant="h2" component="h1">
-            JavaScript Quizz
+            JavaScript Quiz
           </Typography>
         </Stack>
 
-        <Box mt={2}>
-          {questions.length === 0 ? (
-            <Start />
-          ) : (
-            <>
-              <Game /> <Footer />
-            </>
-          )}
-        </Box>
+        {!isFinished ? (
+          <Box mt={2}>
+            {questions.length === 0 ? (
+              <Start />
+            ) : (
+              <>
+                <Game /> <Footer />
+              </>
+            )}
+          </Box>
+        ) : (
+          <FinalScreen />
+        )}
       </Container>
     </main>
   )
