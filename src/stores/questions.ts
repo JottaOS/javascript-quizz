@@ -10,7 +10,7 @@ export const useQuestionStore = create<State>()(
       questions: [],
       currentQuestion: 0,
       answeredQuestions: 0,
-      isFinished: true,
+      isFinished: false,
       fetchQuestions: async (limit: number) => {
         const questions = await questionService.findAll(limit)
         set({ questions })
