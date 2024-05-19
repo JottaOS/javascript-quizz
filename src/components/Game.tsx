@@ -1,28 +1,27 @@
-import { Pagination } from '@mui/material'
+import { IconButton, Stack } from '@mui/material'
 import { useQuestionStore } from '../stores/questions'
 import { Question } from './Question'
-import { QUESTIONS_LIMIT } from '../helpers/constants'
+import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material'
 
 export const Game = () => {
   const questions = useQuestionStore((state) => state.questions)
   const currrentQuestion = useQuestionStore((state) => state.currentQuestion)
-  const changeQuestion = useQuestionStore((state) => state.changeQuestion)
+  const goPreviousQuestion = useQuestionStore((state) => state.goPreviousQuestion)
+  const goNextQuestion = useQuestionStore((state) => state.goNextQuestion)
 
   const questionInfo = questions[currrentQuestion]
 
-  const onPaginationChange = (_: React.ChangeEvent<unknown>, value: number) => {
-    changeQuestion(value - 1)
-  }
-
   return (
     <>
-      <Pagination
-        count={QUESTIONS_LIMIT}
-        showFirstButton
-        showLastButton
-        onChange={onPaginationChange}
-        page={currrentQuestion + 1}
-      />
+      <Stack direction={'row'} gap={2} justifyContent={'center'} alignItems={'center'}>
+        <IconButton onClick={goPreviousQuestion} disabled={currrentQuestion < 1}>
+          <ArrowBackIosNew />
+        </IconButton>
+        {currrentQuestion + 1} / {questions.length}
+        <IconButton onClick={goNextQuestion} disabled={currrentQuestion === questions.length - 1}>
+          <ArrowForwardIos />
+        </IconButton>
+      </Stack>
       <Question info={questionInfo} />
     </>
   )

@@ -29,5 +29,20 @@ export const useQuestionStore = create<State>((set, get) => ({
     }
     set({ questions: newQuestions })
   },
-  changeQuestion: (questionIndex: number) => set({ currentQuestion: questionIndex })
+  goPreviousQuestion: () => {
+    const { currentQuestion } = get()
+    const previousQuestion = currentQuestion - 1
+
+    if (previousQuestion >= 0) {
+      set({ currentQuestion: previousQuestion })
+    }
+  },
+  goNextQuestion: () => {
+    const { currentQuestion, questions } = get()
+    const nextQuestion = currentQuestion + 1
+
+    if (nextQuestion < questions.length) {
+      set({ currentQuestion: nextQuestion })
+    }
+  }
 }))
