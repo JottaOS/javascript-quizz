@@ -33,8 +33,6 @@ export const useQuestionStore = create<State>()(
 
         const newAnsweredQuestions = answeredQuestions + 1
 
-        console.log(newAnsweredQuestions)
-
         set({
           questions: newQuestions,
           answeredQuestions: newAnsweredQuestions,
@@ -58,7 +56,7 @@ export const useQuestionStore = create<State>()(
         }
       },
       reset: () => {
-        set({ currentQuestion: 0, questions: [], isFinished: false })
+        set({ currentQuestion: 0, questions: [], isFinished: false, answeredQuestions: 0 })
       }
     }),
     {

@@ -6,7 +6,8 @@ import { useQuestionStore } from '../stores/questions'
 
 export const FinalScreen = () => {
   const reset = useQuestionStore((state) => state.reset)
-  const { correct, incorrect } = useQuizStats()
+  const answeredQuestions = useQuestionStore((state) => state.answeredQuestions)
+  const { correct } = useQuizStats()
 
   useEffect(() => {
     confetti()
@@ -19,7 +20,7 @@ export const FinalScreen = () => {
         <Typography
           variant="h4"
           fontWeight={'bold'}
-        >{`Puntuación final: ${correct} / ${correct + incorrect}`}</Typography>
+        >{`Puntuación final: ${correct} / ${answeredQuestions}`}</Typography>
         <Button onClick={reset}>Volver al inicio</Button>
       </Stack>
     </Card>
